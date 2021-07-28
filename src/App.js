@@ -7,6 +7,7 @@ import { Home } from "./domains/Home";
 import DisplayLimit from "./domains/DisplayLimit";
 import { DisplayAPhoto } from "./domains/DisplayAPhoto";
 import PhotosByAlbum from "./domains/PhotoByAlbum";
+import DisplayUsers from "./domains/DisplayUsers";
 
 const Main = styled.div`
   display: flex;
@@ -61,6 +62,7 @@ function App() {
             <Flex>
               <Link to="/">Home</Link>
               <Link to="/photos-by-album">Photos by Album</Link>
+              <Link to="/users">Users</Link>
             </Flex>
             <Flex>
               <DisplayAPhoto />
@@ -71,6 +73,10 @@ function App() {
 
           <Content>
             <Switch>
+              <Route path="/users">
+                <DisplayUsers />
+              </Route>
+
               <Route path="/photos-by-album">
                 <PhotosByAlbum limit={limit} />
               </Route>
