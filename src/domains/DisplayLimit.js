@@ -2,7 +2,6 @@ import React from "react";
 
 const DisplayLimit = (props) => {
   const onChange = (e) => {
-    console.log(e.target.value);
     props.setLimit(e.target.value);
   };
 
@@ -18,7 +17,5 @@ const DisplayLimit = (props) => {
     </div>
   );
 };
-
-DisplayLimit.propTypes = {};
 
 export default DisplayLimit;
