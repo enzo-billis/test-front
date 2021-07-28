@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import photos from "./domains/PhotoByAlbum";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { HeaderPhotosLength } from "./domains/HeaderPhotosLength";

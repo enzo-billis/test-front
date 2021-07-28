@@ -9,5 +9,11 @@ export const DisplayAPhoto = () => {
       setPhotoUrl(data.url);
     });
 
-  return <div>{photoUrl ? <img width="50" src={photoUrl} /> : null}</div>;
+  return (
+    <div>
+      {photoUrl ? (
+        <img width="50" src={photoUrl} alt="User profile avatar" />
+      ) : null}
+    </div>
+  );
 };

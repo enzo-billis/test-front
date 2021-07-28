@@ -43,10 +43,10 @@ const PhotosByAlbum = (props) => {
         var t1 = performance.now();
         console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
       });
-  }, []);
+  });
 
   return (
-    <Style >
+    <Style>
       {array.map((value, key) => {
         return (
           <div key={key}>
@@ -57,7 +57,7 @@ const PhotosByAlbum = (props) => {
           </div>
         );
       })}
-    </Style >
+    </Style>
   );
 };
 
