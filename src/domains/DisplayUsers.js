@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import UserCard from "../components/UserCard";
+import { getUsers } from "../services/users";
 
 const FlexContainer = styled.div`
   display: flex;
@@ -14,11 +15,7 @@ const DisplayUsers = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/users"
-      );
-      const users = await response.json();
-      setUsers(users);
+      setUsers(await getUsers());
     };
     fetchUsers();
   }, [setUsers]);
