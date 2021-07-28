@@ -72,7 +72,11 @@ const UserCard = ({ user }) => {
         <div>{user.email}</div>
         <div>{user.phone}</div>
         <div>
-          <Link target="_blank" rel="noreferrer" href={user.website}>
+          <Link
+            target="_blank"
+            rel="noreferrer"
+            href={`https://${user.website}`}
+          >
             {user.website}
           </Link>
         </div>
