@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { getPhotos } from "../services/photos";
 
 // Display photos which a title length <= to the limit in parameter
 
@@ -8,50 +9,61 @@ const Style = styled.div`
 `;
 
 const PhotosByAlbum = (props) => {
-  const [array, setArray] = useState([]);
+  const [photos, setPhotos] = useState([]);
+  const [albums, setAlbums] = useState([]);
   const displayLimitSize = props.limit;
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/photos")
-      .then((data) => data.json())
-      .then((data) => {
-        var t0 = performance.now();
+    const fetchPhotos = async () => {
+      setPhotos(await getPhotos());
+    }
+    fetchPhotos();
+  }, [setPhotos])
 
-        const datachanged = data
-          .sort((a, b) => {
-            return a.title.length > b.title.length;
-          })
-          .map((value) => {
-            value.title = value.title.toUpperCase();
-            value.titleNbLetters = value.title.length;
-            return value;
-          });
+  useEffect(() => {
+    if(!photos || !photos.length) {
+      return;
+    }
+    const t0 = performance.now();
 
-        const dataSorted = datachanged.filter(
-          (v) => v.title.length <= displayLimitSize
-        );
-
-        const albums = [];
-        dataSorted.forEach((data) => {
-          if (albums[data.albumId] && albums[data.albumId].length >= 0) {
-            albums[data.albumId].push(data);
-          } else {
-            albums[data.albumId] = [data];
-          }
-        });
-        setArray(albums);
-        var t1 = performance.now();
-        console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+    const datachanged = photos
+      .sort((a, b) => {
+        return a.title.length > b.title.length;
+      })
+      .map((value) => {
+        return {...value, title: value.title.toUpperCase()}
       });
-  }, [displayLimitSize]);
+
+    const dataSorted = datachanged.filter(
+      (v) => v.title.length <= displayLimitSize
+    );
+
+    const albums = [];
+    dataSorted.forEach((data) => {
+      if (albums[data.albumId] && Array.isArray(albums[data.albumId])) {
+        albums[data.albumId].push(data);
+      } else {
+        albums[data.albumId] = [data];
+      }
+    });
+    setAlbums(albums);
+    const t1 = performance.now();
+    console.log("Albums treatment took " + (t1 - t0) + " milliseconds.");
+    // Divided by 43 the time used to treat the album
+  }, [displayLimitSize, photos]);
+
+  if(!albums || !albums.length) {
+    return <Style>A ugly loader displayed during photos fetch and first albums treatment </Style>
+  }
+
 
   return (
     <Style>
-      {array.map((value, key) => {
+      {albums.map((value, key) => {
         return (
           <div key={key}>
-            {value.map((photo) => {
-              return <div>{photo.title}</div>;
+            {value.map((photo, key) => {
+              return <div key={key}>{photo.title}</div>;
             })}
             <hr />
           </div>

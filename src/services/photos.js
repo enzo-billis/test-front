@@ -3,4 +3,9 @@ const getAvatar = async () => {
   return await response.json();
 };
 
-export { getAvatar };
+const getPhotos = async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/photos");
+  return await response.json();
+};
+
+export { getAvatar, getPhotos };
