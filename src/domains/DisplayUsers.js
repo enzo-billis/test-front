@@ -22,7 +22,7 @@ const DisplayUsers = () => {
 
   if (!users || !users.length) {
     return (
-      <>This is a very ugly loading... But I will never be displayed so...</>
+      <FlexContainer>Loader</FlexContainer>
     );
   }
 
