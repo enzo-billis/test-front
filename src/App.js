@@ -7,6 +7,7 @@ import DisplayLimit from "./domains/DisplayLimit";
 import { DisplayAPhoto } from "./domains/DisplayAPhoto";
 import PhotosByAlbum from "./domains/PhotoByAlbum";
 import DisplayUsers from "./domains/DisplayUsers";
+import { getPhotos } from "./services/photos";
 
 const Main = styled.div`
   display: flex;
@@ -45,13 +46,13 @@ const Content = styled.div`
 function App() {
   const [photos, setPhotos] = useState([]);
   const [limit, setLimit] = useState(25);
+
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/photos")
-      .then((data) => data.json())
-      .then((data) => {
-        setPhotos(data);
-      });
-  }, []);
+    const fetchPhotos = async () => {
+      setPhotos(await getPhotos());
+    }
+    fetchPhotos();
+  }, [setPhotos])
 
   return (
     <div className="App">
@@ -77,7 +78,7 @@ function App() {
               </Route>
 
               <Route path="/photos-by-album">
-                <PhotosByAlbum limit={limit} />
+                <PhotosByAlbum photos={photos} limit={limit} />
               </Route>
 
               <Route path="/">

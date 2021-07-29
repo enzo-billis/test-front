@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getPhotos } from "../services/photos";
 
 // Display photos which a title length <= to the limit in parameter
 
@@ -8,22 +7,15 @@ const Style = styled.div`
   color: black;
 `;
 
-const PhotosByAlbum = (props) => {
-  const [photos, setPhotos] = useState([]);
+const PhotosByAlbum = ({photos, limit}) => {
   const [albums, setAlbums] = useState([]);
-  const displayLimitSize = props.limit;
-
-  useEffect(() => {
-    const fetchPhotos = async () => {
-      setPhotos(await getPhotos());
-    }
-    fetchPhotos();
-  }, [setPhotos])
+  const displayLimitSize = limit;
 
   useEffect(() => {
     if(!photos || !photos.length) {
       return;
     }
+
     const t0 = performance.now();
 
     const dataSorted = photos.filter(
@@ -38,15 +30,15 @@ const PhotosByAlbum = (props) => {
         return {...value, title: value.title.toUpperCase()}
       });
 
-    const albums = [];
+    const newAlbums = [];
     datachanged.forEach((data) => {
-      if (albums[data.albumId] && Array.isArray(albums[data.albumId])) {
-        albums[data.albumId].push(data);
+      if (newAlbums[data.albumId] && Array.isArray(newAlbums[data.albumId])) {
+        newAlbums[data.albumId].push(data);
       } else {
-        albums[data.albumId] = [data];
+        newAlbums[data.albumId] = [data];
       }
     });
-    setAlbums(albums);
+    setAlbums(newAlbums);
     const t1 = performance.now();
     console.log("Albums treatment took " + (t1 - t0) + " milliseconds.");
     // Divided by 43 the time used to treat the album
