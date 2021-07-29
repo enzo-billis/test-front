@@ -28,8 +28,8 @@ const DisplayUsers = () => {
 
   return (
     <FlexContainer>
-      {users.map((user) => (
-        <UserCard user={user} />
+      {users.map((user, index) => (
+        <UserCard key={index} user={user} />
       ))}
     </FlexContainer>
   );
