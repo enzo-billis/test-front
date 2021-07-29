@@ -65,7 +65,7 @@ function App() {
             </Flex>
             <Flex>
               <DisplayAPhoto />
-              <HeaderPhotosLength datas={photos} />
+              <HeaderPhotosLength photos={photos} />
               <DisplayLimit setLimit={setLimit} limit={limit} />
             </Flex>
           </Header>
