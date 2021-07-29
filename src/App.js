@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import photos from "./domains/PhotoByAlbum";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { HeaderPhotosLength } from "./domains/HeaderPhotosLength";
@@ -7,6 +6,8 @@ import { Home } from "./domains/Home";
 import DisplayLimit from "./domains/DisplayLimit";
 import { DisplayAPhoto } from "./domains/DisplayAPhoto";
 import PhotosByAlbum from "./domains/PhotoByAlbum";
+import DisplayUsers from "./domains/DisplayUsers";
+import { getPhotos } from "./services/photos";
 
 const Main = styled.div`
   display: flex;
@@ -45,13 +46,13 @@ const Content = styled.div`
 function App() {
   const [photos, setPhotos] = useState([]);
   const [limit, setLimit] = useState(25);
+
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/photos")
-      .then((data) => data.json())
-      .then((data) => {
-        setPhotos(data);
-      });
-  }, []);
+    const fetchPhotos = async () => {
+      setPhotos(await getPhotos());
+    }
+    fetchPhotos();
+  }, [setPhotos])
 
   return (
     <div className="App">
@@ -61,18 +62,23 @@ function App() {
             <Flex>
               <Link to="/">Home</Link>
               <Link to="/photos-by-album">Photos by Album</Link>
+              <Link to="/users">Users</Link>
             </Flex>
             <Flex>
               <DisplayAPhoto />
-              <HeaderPhotosLength datas={photos} />
+              <HeaderPhotosLength photos={photos} />
               <DisplayLimit setLimit={setLimit} limit={limit} />
             </Flex>
           </Header>
 
           <Content>
             <Switch>
+              <Route path="/users">
+                <DisplayUsers />
+              </Route>
+
               <Route path="/photos-by-album">
-                <PhotosByAlbum limit={limit} />
+                <PhotosByAlbum photos={photos} limit={limit} />
               </Route>
 
               <Route path="/">

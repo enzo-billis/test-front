@@ -7,57 +7,61 @@ const Style = styled.div`
   color: black;
 `;
 
-const PhotosByAlbum = (props) => {
-  const [array, setArray] = useState([]);
-  const displayLimitSize = props.limit;
+const PhotosByAlbum = ({photos, limit}) => {
+  const [albums, setAlbums] = useState([]);
+  const displayLimitSize = limit;
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/photos")
-      .then((data) => data.json())
-      .then((data) => {
-        var t0 = performance.now();
+    if(!photos || !photos.length) {
+      return;
+    }
 
-        const datachanged = data
-          .sort((a, b) => {
-            return a.title.length > b.title.length;
-          })
-          .map((value) => {
-            value.title = value.title.toUpperCase();
-            value.titleNbLetters = value.title.length;
-            return value;
-          });
+    const t0 = performance.now();
 
-        const dataSorted = datachanged.filter(
-          (v) => v.title.length <= displayLimitSize
-        );
+    const dataSorted = photos.filter(
+      (v) => v.title.length <= displayLimitSize
+    );
 
-        const albums = [];
-        dataSorted.forEach((data) => {
-          if (albums[data.albumId] && albums[data.albumId].length >= 0) {
-            albums[data.albumId].push(data);
-          } else {
-            albums[data.albumId] = [data];
-          }
-        });
-        setArray(albums);
-        var t1 = performance.now();
-        console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+    const datachanged = dataSorted
+      .sort((a, b) => {
+        return a.title.length > b.title.length;
+      })
+      .map((value) => {
+        return {...value, title: value.title.toUpperCase()}
       });
-  }, []);
+
+    const newAlbums = [];
+    datachanged.forEach((data) => {
+      if (newAlbums[data.albumId] && Array.isArray(newAlbums[data.albumId])) {
+        newAlbums[data.albumId].push(data);
+      } else {
+        newAlbums[data.albumId] = [data];
+      }
+    });
+    setAlbums(newAlbums);
+    const t1 = performance.now();
+    console.log("Albums treatment took " + (t1 - t0) + " milliseconds.");
+    // Divided by 43 the time used to treat the album
+  }, [displayLimitSize, photos]);
+
+  if(!albums || !albums.length) {
+    return <Style>A ugly loader displayed during photos fetch and first albums treatment </Style>
+  }
+
 
   return (
-    <Style >
-      {array.map((value, key) => {
+    <Style>
+      {albums.map((value, key) => {
         return (
           <div key={key}>
-            {value.map((photo) => {
-              return <div>{photo.title}</div>;
+            {value.map((photo, key) => {
+              return <div key={key}>{photo.title}</div>;
             })}
             <hr />
           </div>
         );
       })}
-    </Style >
+    </Style>
   );
 };
 

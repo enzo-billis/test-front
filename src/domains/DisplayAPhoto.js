@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getAvatar } from "../services/photos";
 
 export const DisplayAPhoto = () => {
   const [photoUrl, setPhotoUrl] = useState(null);
 
-  fetch("https://jsonplaceholder.typicode.com/photos/1")
-    .then((d) => d.json())
-    .then((data) => {
-      setPhotoUrl(data.url);
-    });
+  useEffect(() => {
+    const fetchPhoto = async () => {
+      const avatar = await getAvatar();
+      setPhotoUrl(avatar.url);
+    };
+    fetchPhoto();
+  }, []);
 
-  return <div>{photoUrl ? <img width="50" src={photoUrl} /> : null}</div>;
+  return (
+    <div>
+      {photoUrl && <img width="50" src={photoUrl} alt="User profile avatar" />}
+    </div>
+  );
 };
