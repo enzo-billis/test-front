@@ -13,7 +13,6 @@ const DisplayLimit = (props) => {
         <option value={35}>35</option>
         <option value={50}>50</option>
       </select>
-      {props.limit}
     </div>
   );
 };
