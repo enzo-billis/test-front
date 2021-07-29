@@ -26,7 +26,11 @@ const PhotosByAlbum = (props) => {
     }
     const t0 = performance.now();
 
-    const datachanged = photos
+    const dataSorted = photos.filter(
+      (v) => v.title.length <= displayLimitSize
+    );
+
+    const datachanged = dataSorted
       .sort((a, b) => {
         return a.title.length > b.title.length;
       })
@@ -34,12 +38,8 @@ const PhotosByAlbum = (props) => {
         return {...value, title: value.title.toUpperCase()}
       });
 
-    const dataSorted = datachanged.filter(
-      (v) => v.title.length <= displayLimitSize
-    );
-
     const albums = [];
-    dataSorted.forEach((data) => {
+    datachanged.forEach((data) => {
       if (albums[data.albumId] && Array.isArray(albums[data.albumId])) {
         albums[data.albumId].push(data);
       } else {
